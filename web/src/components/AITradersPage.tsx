@@ -433,6 +433,10 @@ export function AITradersPage({ onTraderSelect }: AITradersPageProps) {
               api_key: exchange.apiKey || '',
               secret_key: exchange.secretKey || '',
               testnet: exchange.testnet || false,
+              hyperliquid_wallet_addr: exchange.hyperliquidWalletAddr || '',
+              aster_user: exchange.asterUser || '',
+              aster_signer: exchange.asterSigner || '',
+              aster_private_key: exchange.asterPrivateKey || '',
             },
           ])
         ),
@@ -1597,6 +1601,9 @@ function ExchangeConfigModal({
   // 币安配置指南展开状态
   const [showBinanceGuide, setShowBinanceGuide] = useState(false)
 
+  // Hyperliquid 特定字段
+  const [hyperliquidWalletAddr, setHyperliquidWalletAddr] = useState('')
+
   // Aster 特定字段
   const [asterUser, setAsterUser] = useState('')
   const [asterSigner, setAsterSigner] = useState('')
@@ -1660,7 +1667,13 @@ function ExchangeConfigModal({
       await onSave(selectedExchangeId, apiKey.trim(), secretKey.trim(), testnet)
     } else if (selectedExchange?.id === 'hyperliquid') {
       if (!apiKey.trim()) return // 只验证私钥，钱包地址自动从私钥生成
-      await onSave(selectedExchangeId, apiKey.trim(), '', testnet, '') // 传空字符串，后端自动生成地址
+      await onSave(
+        selectedExchangeId,
+        apiKey.trim(),
+        '',
+        testnet,
+        hyperliquidWalletAddr.trim()
+      )
     } else if (selectedExchange?.id === 'aster') {
       if (!asterUser.trim() || !asterSigner.trim() || !asterPrivateKey.trim())
         return
